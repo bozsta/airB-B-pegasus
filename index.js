@@ -2,6 +2,7 @@ const express = require('express')
 const formidable = require('express-formidable')
 const cors = require('cors')
 const mongoose = require('mongoose')
+const helmet = require("helmet");
 
 mongoose.connect('mongodb://localhost/airBB-pegasus', {
     useUnifiedTopology: true,
@@ -11,8 +12,10 @@ mongoose.connect('mongodb://localhost/airBB-pegasus', {
 
 const app = express()
 
+// Middleware
 app.use(formidable())
 app.use(cors())
+app.use(helmet())
 
 // Routes
 const userRoutes = require('./routes/User')
