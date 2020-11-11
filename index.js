@@ -18,8 +18,10 @@ app.use(cors())
 app.use(helmet())
 
 // Routes
-const userRoutes = require('./routes/User')
+const userRoutes = require('./routes/user')
 app.use('/user', userRoutes)
+const roomRoutes = require('./routes/rooms')
+app.use('/room', roomRoutes)
 
 app.all('*', (req,res) => {
     res.status(404).json({error: { message: 'URL not found'}})

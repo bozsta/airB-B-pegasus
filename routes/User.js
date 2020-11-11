@@ -45,9 +45,11 @@ router.post('/sign_up', async (req,res) => {
         const newUser = new User({
             token,
             email,
-            username,
-            name,
-            description,
+            account: {
+                username,
+                name,
+                description,
+            },
             hash,
             salt
         })
@@ -57,9 +59,9 @@ router.post('/sign_up', async (req,res) => {
             _id: user._id,
             token: user.token,
             email: user.email,
-            username: user.username,
-            description: user.description,
-            name: user.name
+            username: user.account.username,
+            description: user.account.description,
+            name: user.account.name
         }
         res.status(200).json(result)
     } catch (error) {
