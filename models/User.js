@@ -26,6 +26,10 @@ const User = monggose.model('User', {
      hash: {
          type: String,
          require: true
+     },
+     salt: {
+        type: String,
+        require: true
      }
 })
 
