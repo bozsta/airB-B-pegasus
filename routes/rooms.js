@@ -99,4 +99,23 @@ router.put('/update/:id', isAuthenticated, async (req,res) => {
         res.status(status).json({ error: { message: error.message}})
     }
 })
+
+router.delete('/delete/:id', isAuthenticated, async (req,res) => {
+    try {
+        const { id } = req.params
+        const room = await Room.findById(id)
+        if (!room) {
+            throw CustomException(404, 'ID not found')
+        }
+        if (!req.user._id.equals(room.user._id)) {
+            throw CustomException(401, 'Unauthorized')
+        }
+       await room.deleteOne({id})
+        res.status(200).json({ message: 'Room deleted'})
+    } catch (error) {
+        const status = error.status || 400
+        res.status(status).json({ error: { message: error.message }})
+    }
+})
+
 module.exports = router
