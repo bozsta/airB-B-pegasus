@@ -46,6 +46,15 @@ router.get('/', async (req,res) => {
         res.status(400).json({ error: {message: error.message}})
     }
 })
+// todo finish
+router.get('/rooms', async (req,res) => {
+    try {
+        const { title, priceMin, priceMax, sort, page, limit } = req.query
+        res.status(200).json({ message: 'Ok route ROMMS filter'})
+    } catch (error) {
+        res.status(400).json({ error: { message: error.message } })
+    }
+})
 
 router.get('/:id', async (req,res) => {
     try {
@@ -57,7 +66,7 @@ router.get('/:id', async (req,res) => {
         })
         res.status(200).json(room)
     } catch (error) {
-        res.status(400).json({ error: { message: error.message}})
+        res.status(400).json({ error: { message: error.message } })
     }
 })
 

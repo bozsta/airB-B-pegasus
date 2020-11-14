@@ -2,7 +2,7 @@ const router = require('express').Router()
 const uid = require('uid2')
 const crypto = require('crypto-js')
 const encBase64 = require("crypto-js/enc-base64");
-const { User } = require('../models/Models');
+const { User, Room } = require('../models/Models');
 const { CustomException } = require('../utils/exeptionHelper');
 const isAuthenticated = require('../middlewares/isAuthenticated');
 const cloudinary = require('cloudinary').v2
@@ -188,6 +188,33 @@ router.delete('/delete_picture/:id', isAuthenticated, async (req,res) => {
                 rooms: userUpdated.rooms
               }
         )
+    } catch (error) {
+        const status = req.status || 400
+        res.status(status).json({ error: {message: error.message}})
+    }
+})
+
+// todo test
+router.get('/rooms/:id', async (req,res) => {
+    try {
+        const { id } = req.params
+        const rooms = await Room.find({user: id})
+        res.status(200).json(rooms)
+    } catch (error) {
+        const status = req.status || 400
+        res.status(status).json({ error: {message: error.message}}) 
+    }
+})
+
+// todo test
+router.get('/:id', async (req, res) => {
+    try {
+        const { id } = req.params
+        const user = await User.findById(id).selected('_id account rooms')
+        if (!user) {
+            throw CustomException(404, 'User id not found')
+        }
+        res.status(200).json(user)
     } catch (error) {
         const status = req.status || 400
         res.status(status).json({ error: {message: error.message}})
