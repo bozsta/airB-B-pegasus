@@ -107,12 +107,14 @@ router.delete('/delete/:id', isAuthenticated, async (req,res) => {
         const { id } = req.params
         const room = await Room.findById(id)
         if (!room) {
-            throw CustomException(404, 'ID not found')
+            throw CustomException(404, 'Room id not found')
         }
         if (!req.user._id.equals(room.user._id)) {
             throw CustomException(401, 'Unauthorized')
         }
-       await room.deleteOne({id})
+        await cloudinary.api.delete_resources_by_prefix(`airBnB/rooms/${id}`)
+        cloudinary.api.delete_folder(`airBnB/rooms/${id}`)
+        await room.deleteOne({id})
         res.status(200).json({ message: 'Room deleted'})
     } catch (error) {
         const status = error.status || 400
@@ -134,13 +136,14 @@ router.put('/upload_picture/:id', isAuthenticated, async (req,res) => {
         if (!picture) {
             throw new Error('Missing file parameters')
         }
+        if (room.photos.length >= 5) {
+            throw new Error('Maximum number of images reached')
+        }
         const result = await cloudinary.uploader.upload(picture.path, {folder: `airBnB/rooms/${id}`})
         if (!result.secure_url) {
             throw new Error('Error cloud image upload')
         }
-        if (room.photos.length >= 5) {
-            throw new Error('Maximum number of images reached')
-        }
+       
         room.photos.push({url: result.secure_url, public_id: result.public_id})
         const updatedRoom = await room.save()
 
