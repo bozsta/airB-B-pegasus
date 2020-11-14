@@ -32,7 +32,10 @@ const User = mongoose.model('User', {
          type: String,
          require: true
       },
-      photo: Object
+      photo: {
+         type: mongoose.Schema.Types.Mixed,
+         default: null
+      },
    },
    rooms: [
       {
