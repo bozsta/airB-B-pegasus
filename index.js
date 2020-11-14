@@ -2,14 +2,17 @@ const express = require('express')
 const formidable = require('express-formidable')
 const cors = require('cors')
 const mongoose = require('mongoose')
-const helmet = require("helmet");
+const helmet = require("helmet")
+const cloudinary = require('cloudinary').v2
+require('dotenv').config()
 
-mongoose.connect('mongodb://localhost/airBB-pegasus', {
+mongoose.connect(process.env.MONGODB_URI, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
     useCreateIndex: true
 })
 
+const PORT = process.env.PORT
 const app = express()
 
 // Middleware
@@ -27,6 +30,6 @@ app.all('*', (req,res) => {
     res.status(404).json({error: { message: 'URL not found'}})
 })
 
-app.listen(3000, () => {
-    console.log(`Server started on port 3000`)
+app.listen(PORT, () => {
+    console.log(`Server started on port ${PORT}`)
 })

@@ -35,7 +35,9 @@ router.post('/sign_up', async (req,res) => {
                 fields.push('Username')
             }
             const message = fields.length === 2 ? 'Email and Username' : fields[0]
-            throw new Error(`${message} already exist`)
+            // status 409
+            throw CustomException(409, `${message} already exist`)
+            // throw new Error(`${message} already exist`)
         }
 
         const token = uid(24)
@@ -65,7 +67,8 @@ router.post('/sign_up', async (req,res) => {
         }
         res.status(200).json(result)
     } catch (error) {
-       res.status(400).json({ error: { message: error.message }}) 
+        const status = error.status || 400
+       res.status(status).json({ error: { message: error.message }}) 
     }
 })
 
