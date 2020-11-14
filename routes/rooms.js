@@ -119,11 +119,11 @@ router.delete('/delete/:id', isAuthenticated, async (req,res) => {
         res.status(status).json({ error: { message: error.message }})
     }
 })
-// TODO test
+
 router.put('/upload_picture/:id', isAuthenticated, async (req,res) => {
     try {
         const { id } = req.params
-        const picture = req.files
+        const { picture } = req.files
         const room = await Room.findById(id)
         if (!room) {
             throw CustomException(404, 'Room not found')
@@ -156,6 +156,38 @@ router.put('/upload_picture/:id', isAuthenticated, async (req,res) => {
               }
         )
 
+    } catch (error) {
+        const status = error.status || 400
+        res.status(status).json({ error: { message: error.message }})
+    }
+})
+
+router.delete('/delete_picture/:id', isAuthenticated, async (req,res) => {
+    try {
+        const { id } = req.params
+        const { picture_id } = req.fields
+        const room = await Room.findById(id)
+
+        if (!picture_id) {
+            throw new Error('Missing parameters')
+        }
+        if (!room) {
+            throw CustomException(404,'Room not found')
+        }
+        if (!req.user._id.equals(room.user._id)) {
+            throw CustomException(401, 'Unauthorizeds')
+        }
+        await cloudinary.api.delete_resources([picture_id])
+        for (let i = 0; i < room.photos.length; i++) {
+            if (room.photos[i].public_id === picture_id) {
+                room.photos.splice(i,1)
+            }
+        }
+        room.save()
+        if (!room.photos.length) {
+            cloudinary.api.delete_folder(`airBnB/rooms/${id}`)
+        }
+        res.status(200).json({ message: "Picture deleted"})
     } catch (error) {
         const status = error.status || 400
         res.status(status).json({ error: { message: error.message }})
