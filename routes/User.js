@@ -114,10 +114,10 @@ router.post('/log_in', async (req,res) => {
 router.put('/upload_picture/:id', isAuthenticated, async (req,res) => {
     try {
         const { id } =  req.params
-        const picture = req.files.picture.path
+        const picture = req.files.picture
 
         if (!picture) {
-            throw new Error('Missing data')
+            throw new Error('Missing file paraméters')
         }
 
         const user = await User.findById(id)
@@ -127,7 +127,7 @@ router.put('/upload_picture/:id', isAuthenticated, async (req,res) => {
         if (!req.user._id.equals(user._id)) {
             throw CustomException(401, "Unauthorized")
         }
-        const result = await cloudinary.uploader.upload(picture, { folder: `airBnB/users/${user._id}` })
+        const result = await cloudinary.uploader.upload(picture.path, { folder: `airBnB/users/${user._id}` })
         if (!result.secure_url) {
             throw new Error('Error cloud image upload')
         }
