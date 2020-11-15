@@ -5,6 +5,7 @@ const encBase64 = require("crypto-js/enc-base64");
 const { User, Room } = require('../models/Models');
 const { CustomException } = require('../utils/exeptionHelper');
 const isAuthenticated = require('../middlewares/isAuthenticated');
+const mailgun = require('mailgun-js')({apiKey: process.env.MAILGUN_API_KEY, domain: process.env.MAILGUN_DOMAIN});
 const cloudinary = require('cloudinary').v2
 
 router.post('/sign_up', async (req,res) => {
@@ -110,20 +111,18 @@ router.post('/log_in', async (req,res) => {
         res.status(status).json({ error: { message: error.message } })
     }
 })
-// pas de id en params ?
+
 // todo test
-router.put('/update/:id', isAuthenticated, async (req,res) => {
+router.put('/update', isAuthenticated, async (req,res) => {
     try {
         let { username, name, email, description} = req.fields
-        const { id } =  req.params
+       // const { id } =  req.params
         
-        const user = await User.findById(id)
+        const user = await User.findById(req.user._id)
         if (!user) {
             throw CustomException(404, 'User id not found')
         }
-        if (!req.user._id.equals(user._id)) {
-            throw CustomException(401, 'Unauthorized')
-        }
+       
         if (email) {
             if (email.trim()) {
                 email = email.trim()
@@ -179,23 +178,80 @@ router.put('/update/:id', isAuthenticated, async (req,res) => {
 // todo test
 router.put('/update_password', isAuthenticated, async (req,res) => {
     try {
-        
+        let { oldPass, newPass } = req.fields
+        if (!oldPass || !oldPass.trim() || !newPass || !newPass.trim()) {
+            throw new Error('Missing data parameters')
+        }
+        const user =  await User.findById(req.user._id)
+        if (!user) {
+            throw CustomException(404, 'User not found')
+        }
+
+        const oldHash = crypto.SHA256(oldPass + user.salt).toString(encBase64)
+        const newHash= crypto.SHA256(newPass + user.salt).toString(encBase64)
+
+        if (oldHash !== user.hash) {
+            throw CustomException(401, 'Unauthorized')
+        }
+
+        user.hash = newHash
+        const updatedUser = await user.save()
+        res.status(200).json({
+            _id: updatedUser._id,
+            email: updatedUser.email,
+            token: updatedUser.token,
+            account: {
+              username: updatedUser.account.username,
+              name: updatedUser.account.name,
+              description: updatedUser.account.description,
+              photo: updatedUser.account.photo
+            },
+            rooms: updatedUser.account.rooms
+        })  
     } catch (error) {
         const status = error.status || 400
         res.status(status).json({ error: { message: error.message } })
     }
 })
 // todo
-router.post('/recover_password', (req,res) => {
+router.post('/recover_password', async (req,res) => {
     try {
+        const { email } = req.fields
+        const resetToken = uid(24)
+        const expirDate = new Date(Date.now() + (15 * 60000))
+
+        const user = await User.findOne({email})
+        if(!user) {
+            throw CustomException(404, 'Email not found')
+        }
+        user.reset.token = resetToken
+        user.reset.expiration = expirDate
+        await user.save()
+
+        var data = {
+            from: 'noreply@myairbnb.fake <noreply@myairbnb.fake>',
+            to: email,
+            subject: 'My airBnB reset password',
+            html: `<h2>reset password link</h2>
+            <a>link to reset IHM</a>`
+          }; 
+    
+          const result = await mailgun.messages().send(data)
+          res.status(200).json(result)
         
     } catch (error) {
         const status = error.status || 400
         res.status(status).json({ error: { message: error.message } })
     }
 })
-router.post('/reset_password', (req, res) => {
+// to finish
+router.post('/reset_password', async (req, res) => {
     try {
+        const { passwordToken, password } = req.fields
+        if (!passwordToken || !passwordToken.trim() || !password || !password.trim()) {
+            throw new Error('Missing Parameters')
+        }
+        const user = await User.findOne({passwordToken})
         
     } catch (error) {
         const status = error.status || 400

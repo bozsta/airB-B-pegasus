@@ -42,7 +42,9 @@ const User = mongoose.model('User', {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Room"
       }
-    ]
+    ],
+   updatePasswordToken: { type: String, default: null },
+   updatePasswordExpiredAt: { type: Number, default: null },
 })
 
 module.exports = User
