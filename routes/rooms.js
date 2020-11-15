@@ -46,11 +46,52 @@ router.get('/', async (req,res) => {
         res.status(400).json({ error: {message: error.message}})
     }
 })
-// todo finish
-router.get('/rooms', async (req,res) => {
+
+router.get('/filtered', async (req,res) => {
     try {
         const { title, priceMin, priceMax, sort, page, limit } = req.query
-        res.status(200).json({ message: 'Ok route ROMMS filter'})
+
+        const filter = {}
+        const sortItem = {}
+        let toSkip = 0
+        let numMax = 0
+
+        if (title) {
+            filter.title = new RegExp(title, "i")
+        }
+        if (priceMin || priceMax) {
+            const price = {}
+            if (priceMin) {
+                price.$gte = Number(priceMin) 
+                
+            }
+            if (priceMax) {
+                price.$lte = Number(priceMax)
+            }
+            filter.price = price
+        }
+        if (sort) {
+            switch (sort) {
+                case 'price-desc' :
+                    sortItem.price = -1
+                    break 
+                case 'price-asc' :
+                    sortItem.price = 1
+                    break 
+                default :
+                throw new Error('Invalde sort parameter value')
+            }
+        }
+        if (limit) {
+            numMax = Number(limit) 
+            if (page && page > 0 ) {
+                toSkip = Number(limit * (page - 1))
+            }
+        }
+     
+        const rooms = await Room.find(filter).sort(sortItem).skip(toSkip).limit(numMax)
+
+        res.status(200).json(rooms)
     } catch (error) {
         res.status(400).json({ error: { message: error.message } })
     }
