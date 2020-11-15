@@ -194,7 +194,6 @@ router.delete('/delete_picture/:id', isAuthenticated, async (req,res) => {
     }
 })
 
-// todo test
 router.get('/rooms/:id', async (req,res) => {
     try {
         const { id } = req.params
@@ -206,11 +205,10 @@ router.get('/rooms/:id', async (req,res) => {
     }
 })
 
-// todo test
 router.get('/:id', async (req, res) => {
     try {
         const { id } = req.params
-        const user = await User.findById(id).selected('_id account rooms')
+        const user = await User.findById(id).select('_id account rooms')
         if (!user) {
             throw CustomException(404, 'User id not found')
         }
