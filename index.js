@@ -5,6 +5,8 @@ const mongoose = require('mongoose')
 const helmet = require("helmet")
 const cloudinary = require('cloudinary').v2
 require('dotenv').config()
+const mailgun = require('mailgun-js')({apiKey: process.env.MAILGUN_API_KEY, domain: process.env.MAILGUN_DOMAIN});
+
 
 mongoose.connect(process.env.MONGODB_URI, {
     useUnifiedTopology: true,
@@ -31,6 +33,22 @@ const userRoutes = require('./routes/user')
 app.use('/user', userRoutes)
 const roomRoutes = require('./routes/rooms')
 app.use('/room', roomRoutes)
+
+/* Only for test */
+app.get('/mail', (req,res) => {
+    var data = {
+        from: 'Excited User <me@samples.mailgun.org>',
+        to: 'lubozfabien@hotmail.com',
+        subject: 'Hello test mail gun',
+        text: 'Testing some Mailgun awesomeness!'
+      }; 
+
+      mailgun.messages().send(data, function (error, body) {
+        console.log('body mailgun:', body);
+      });
+
+    res.status(200).json({ message: 'test mailgun'})
+})
 
 app.all('*', (req,res) => {
     res.status(404).json({error: { message: 'URL not found'}})

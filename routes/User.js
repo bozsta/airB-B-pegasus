@@ -23,7 +23,7 @@ router.post('/sign_up', async (req,res) => {
         name = name.trim()
         description = description.trim()
 
-        const alreadyExisit = await User.findOne({$or: [
+        const alreadyExisit = await User.find({$or: [
             { email },
             { username }
         ]})
@@ -105,6 +105,107 @@ router.post('/log_in', async (req,res) => {
             description: user.description,
             name: user.name
         })
+    } catch (error) {
+        const status = error.status || 400
+        res.status(status).json({ error: { message: error.message } })
+    }
+})
+// pas de id en params ?
+// todo test
+router.put('/update/:id', isAuthenticated, async (req,res) => {
+    try {
+        let { username, name, email, description} = req.fields
+        const { id } =  req.params
+        
+        const user = await User.findById(id)
+        if (!user) {
+            throw CustomException(404, 'User id not found')
+        }
+        if (!req.user._id.equals(user._id)) {
+            throw CustomException(401, 'Unauthorized')
+        }
+        if (email) {
+            if (email.trim()) {
+                email = email.trim()
+                const emailAlready = await User.findOne({email})
+                if (emailAlready) {
+                    throw CustomException(409, `emailAlready already exist`)
+                }
+                user.email = email
+            } else { throw new Error('Email is an empty string')}
+        }
+        if (username) {
+            if (username.trim()) {
+                username = username.trim()
+                const userNameAlready = await User.findOne({username})
+                if (userNameAlready) {
+                    throw CustomException(409, `username already exist`)
+                }
+                user.account.username = username
+            } else { throw new Error('Username is an empty string')}
+        }
+        if (name) {
+            if (name.trim()) {
+                name = name.trim()
+                user.account.name = name
+            } else { throw new Error('Name is an empty string')}
+        }
+        if (description) {
+            if (description.trim()) {
+                description = description.trim()
+                user.account.description = description
+            } else { throw new Error('Description is an empty string')}
+        }
+        const updatedUser = await user.save()
+        res.status(200).json({
+            _id: updatedUser._id,
+            email: updatedUser.email,
+            account: {
+                username: updatedUser.account.username,
+                name: updatedUser.account.name,
+                description: updatedUser.account.description,
+                photo: {
+                url: updatedUser.account.photo,
+                picture_id:updatedUser.account.photo,
+                }
+            },
+            rooms: updatedUser.rooms
+        })
+    } catch (error) {
+        const status = error.status || 400
+        res.status(status).json({ error: { message: error.message } })
+    }
+})
+// todo test
+router.put('/update_password', isAuthenticated, async (req,res) => {
+    try {
+        
+    } catch (error) {
+        const status = error.status || 400
+        res.status(status).json({ error: { message: error.message } })
+    }
+})
+// todo
+router.post('/recover_password', (req,res) => {
+    try {
+        
+    } catch (error) {
+        const status = error.status || 400
+        res.status(status).json({ error: { message: error.message } })
+    }
+})
+router.post('/reset_password', (req, res) => {
+    try {
+        
+    } catch (error) {
+        const status = error.status || 400
+        res.status(status).json({ error: { message: error.message } })
+    }
+})
+// todo
+router.post('/user/delete', (req,res) => {
+    try {
+        
     } catch (error) {
         const status = error.status || 400
         res.status(status).json({ error: { message: error.message } })
