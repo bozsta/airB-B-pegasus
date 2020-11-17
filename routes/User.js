@@ -213,23 +213,23 @@ router.put('/update_password', isAuthenticated, async (req,res) => {
         res.status(status).json({ error: { message: error.message } })
     }
 })
-// todo
+
 router.post('/recover_password', async (req,res) => {
     try {
         const { email } = req.fields
         const resetToken = uid(24)
-        const expirDate = new Date(Date.now() + (15 * 60000))
+        const expirDate = Date.now()  + (15 * 60000)
 
         const user = await User.findOne({email})
         if(!user) {
             throw CustomException(404, 'Email not found')
         }
-        user.reset.token = resetToken
-        user.reset.expiration = expirDate
+        user.updatePasswordToken = resetToken
+        user.updatePasswordExpiredAt = expirDate
         await user.save()
 
         var data = {
-            from: 'noreply@myairbnb.fake <noreply@myairbnb.fake>',
+            from: 'noreply@myairbnb.fr <noreply@myairbnb.fr>',
             to: email,
             subject: 'My airBnB reset password',
             html: `<h2>reset password link</h2>
