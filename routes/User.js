@@ -213,7 +213,7 @@ router.put('/update_password', isAuthenticated, async (req,res) => {
         res.status(status).json({ error: { message: error.message } })
     }
 })
-
+// todo test
 router.post('/recover_password', async (req,res) => {
     try {
         const { email } = req.fields
@@ -237,31 +237,50 @@ router.post('/recover_password', async (req,res) => {
           }; 
     
           const result = await mailgun.messages().send(data)
-          res.status(200).json(result)
+          res.status(200).json({ message: 'A link has been sent to the user'})
         
     } catch (error) {
         const status = error.status || 400
         res.status(status).json({ error: { message: error.message } })
     }
 })
-// to finish
+// todo test
 router.post('/reset_password', async (req, res) => {
     try {
         const { passwordToken, password } = req.fields
+        const newSalt = uid(24)
         if (!passwordToken || !passwordToken.trim() || !password || !password.trim()) {
             throw new Error('Missing Parameters')
         }
         const user = await User.findOne({passwordToken})
+        if (!user) {
+            throw CustomException(404, 'User not found')
+        }
+        if (Date.now() > user.updatePasswordExpiredAt) {
+            throw CustomException(401, "Unauthorized")
+        }
+        const newHash = crypto.SHA256(password + salt).toString(encBase64)
+        user.salt = newSalt
+        user.hash = newHash
+        const updatedUser = user.save()
+        res.status(200).json({
+            _id: updatedUser._id,
+            email: updatedUser.email,
+            token: updatedUser.token 
+        })
         
     } catch (error) {
         const status = error.status || 400
         res.status(status).json({ error: { message: error.message } })
     }
 })
-// todo
-router.post('/user/delete', (req,res) => {
+// todo test
+router.delete('/delete/:id', async (req,res) => {
     try {
-        
+        const id = req.query
+        await Room.deleteMany({user: id})
+        await User.deleteOne({ id })
+        res.status(200).json({ message: "User deleted" })
     } catch (error) {
         const status = error.status || 400
         res.status(status).json({ error: { message: error.message } })
