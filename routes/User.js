@@ -26,21 +26,22 @@ router.post('/sign_up', async (req,res) => {
 
         const alreadyExisit = await User.find({$or: [
             { email },
-            { username }
+            { "account.username": username }
         ]})
 
-        if (alreadyExisit) {
+        if (alreadyExisit.length) {
             const fields = []
-            if (alreadyExisit.email === email) {
-                fields.push('Email')
+            for (let i = 0; i < alreadyExisit.length; i++) {
+                if (alreadyExisit[i].email === email) {
+                    fields.push('Email')
+                }
+                if (alreadyExisit[i].account.username === username) {
+                    fields.push('Username')
+                }
             }
-            if (alreadyExisit.username === username) {
-                fields.push('Username')
-            }
+           
             const message = fields.length === 2 ? 'Email and Username' : fields[0]
-            // status 409
             throw CustomException(409, `${message} already exist`)
-            // throw new Error(`${message} already exist`)
         }
 
         const token = uid(24)
@@ -87,7 +88,6 @@ router.post('/log_in', async (req,res) => {
         password = password.trim()
 
         const user = await User.findOne({email})
-        console.log('user', user)
         if (!user) {
             throw CustomException(401, 'Unauthorized')
         }
@@ -116,41 +116,35 @@ router.post('/log_in', async (req,res) => {
 router.put('/update', isAuthenticated, async (req,res) => {
     try {
         let { username, name, email, description} = req.fields
-       // const { id } =  req.params
-        
-        const user = await User.findById(req.user._id)
-        if (!user) {
-            throw CustomException(404, 'User id not found')
-        }
-       
-        if (email) {
-            if (email.trim()) {
+        const user = req.user
+        if (email !== undefined) { 
+            if (email.trim().length) {
                 email = email.trim()
                 const emailAlready = await User.findOne({email})
                 if (emailAlready) {
-                    throw CustomException(409, `emailAlready already exist`)
+                    throw CustomException(409, `Email already already exist`)
                 }
                 user.email = email
             } else { throw new Error('Email is an empty string')}
         }
-        if (username) {
-            if (username.trim()) {
+        if (username !== undefined) {
+            if (username.trim().length) {
                 username = username.trim()
-                const userNameAlready = await User.findOne({username})
+                const userNameAlready = await User.findOne({"account.username": username })
                 if (userNameAlready) {
-                    throw CustomException(409, `username already exist`)
+                    throw CustomException(409, `Username already exist`)
                 }
                 user.account.username = username
             } else { throw new Error('Username is an empty string')}
         }
-        if (name) {
-            if (name.trim()) {
+        if (name !== undefined) {
+            if (name.trim().length) {
                 name = name.trim()
                 user.account.name = name
             } else { throw new Error('Name is an empty string')}
         }
-        if (description) {
-            if (description.trim()) {
+        if (description !== undefined) {
+            if (description.trim().length) {
                 description = description.trim()
                 user.account.description = description
             } else { throw new Error('Description is an empty string')}

@@ -13,6 +13,7 @@ const isAuthenticated = async (req, res, next) => {
         }
         throw new Error('Unauthorized')
     } catch (error) {
+        console.log('qhdsqdh')
         res.status(401).json({ error: { message: error.message}})
     }
 }
