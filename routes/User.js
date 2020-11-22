@@ -112,7 +112,6 @@ router.post('/log_in', async (req,res) => {
     }
 })
 
-// todo test
 router.put('/update', isAuthenticated, async (req,res) => {
     try {
         let { username, name, email, description} = req.fields
