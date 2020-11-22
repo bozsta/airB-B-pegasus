@@ -168,17 +168,14 @@ router.put('/update', isAuthenticated, async (req,res) => {
         res.status(status).json({ error: { message: error.message } })
     }
 })
-// todo test
+
 router.put('/update_password', isAuthenticated, async (req,res) => {
     try {
         let { oldPass, newPass } = req.fields
         if (!oldPass || !oldPass.trim() || !newPass || !newPass.trim()) {
             throw new Error('Missing data parameters')
         }
-        const user =  await User.findById(req.user._id)
-        if (!user) {
-            throw CustomException(404, 'User not found')
-        }
+        const user = req.user
 
         const oldHash = crypto.SHA256(oldPass + user.salt).toString(encBase64)
         const newHash= crypto.SHA256(newPass + user.salt).toString(encBase64)
@@ -186,6 +183,8 @@ router.put('/update_password', isAuthenticated, async (req,res) => {
         if (oldHash !== user.hash) {
             throw CustomException(401, 'Unauthorized')
         }
+        
+
 
         user.hash = newHash
         const updatedUser = await user.save()
