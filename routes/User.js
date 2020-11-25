@@ -184,8 +184,6 @@ router.put('/update_password', isAuthenticated, async (req,res) => {
             throw CustomException(401, 'Unauthorized')
         }
         
-
-
         user.hash = newHash
         const updatedUser = await user.save()
         res.status(200).json({
@@ -205,7 +203,7 @@ router.put('/update_password', isAuthenticated, async (req,res) => {
         res.status(status).json({ error: { message: error.message } })
     }
 })
-// todo test
+
 router.post('/recover_password', async (req,res) => {
     try {
         const { email } = req.fields
@@ -236,25 +234,27 @@ router.post('/recover_password', async (req,res) => {
         res.status(status).json({ error: { message: error.message } })
     }
 })
-// todo test
+
 router.post('/reset_password', async (req, res) => {
     try {
-        const { passwordToken, password } = req.fields
+        const { updatePasswordToken, password } = req.fields
         const newSalt = uid(24)
-        if (!passwordToken || !passwordToken.trim() || !password || !password.trim()) {
+        if (!updatePasswordToken || !updatePasswordToken.trim() || !password || !password.trim()) {
             throw new Error('Missing Parameters')
         }
-        const user = await User.findOne({passwordToken})
+        const user = await User.findOne({updatePasswordToken})
+        console.log('user', user)
         if (!user) {
             throw CustomException(404, 'User not found')
         }
         if (Date.now() > user.updatePasswordExpiredAt) {
             throw CustomException(401, "Unauthorized")
         }
-        const newHash = crypto.SHA256(password + salt).toString(encBase64)
+        const newHash = crypto.SHA256(password + newSalt).toString(encBase64)
         user.salt = newSalt
         user.hash = newHash
-        const updatedUser = user.save()
+        const updatedUser = await user.save()
+        console.log('updatedUser',updatedUser)
         res.status(200).json({
             _id: updatedUser._id,
             email: updatedUser.email,
@@ -266,12 +266,13 @@ router.post('/reset_password', async (req, res) => {
         res.status(status).json({ error: { message: error.message } })
     }
 })
-// todo test
+
 router.delete('/delete/:id', async (req,res) => {
     try {
-        const id = req.query
+        const { id } = req.params
+        console.log('id', id)
         await Room.deleteMany({user: id})
-        await User.deleteOne({ id })
+        await User.deleteOne({ _id: id })
         res.status(200).json({ message: "User deleted" })
     } catch (error) {
         const status = error.status || 400
