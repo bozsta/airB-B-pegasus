@@ -96,6 +96,28 @@ router.get('/filtered', async (req,res) => {
     }
 })
 
+router.get('/around', async (req, res) => {
+    try {
+        let { latitude, longitude } = req.query
+        if (!latitude || !longitude) {
+            throw new Error('Missing parameters')
+        }
+        if (isNaN(latitude) || isNaN(longitude)) {
+            throw new Error('Unexpected parameters format')
+        }
+        const around = await Room.find({
+            location: {
+                $near: [latitude, longitude],
+                $maxDistance: 1.5
+            }
+        })
+        res.status(200).json(around)
+    } catch (error) {
+        const status = error.status || 400
+        res.status(status).json({ error: { message: error.message }})
+    }
+})
+
 router.get('/:id', async (req,res) => {
     try {
         const { id } = req.params
@@ -245,27 +267,6 @@ router.delete('/delete_picture/:id', isAuthenticated, async (req,res) => {
         res.status(status).json({ error: { message: error.message }})
     }
 })
-// todo test
-router.get('/around', async (req, res) => {
-    try {
-        let { latitude, longitude } = req.query
-        if (!latitude || !longitude) {
-            throw new Error('Missing parameters')
-        }
-        if (isNaN(latitude) || isNaN(longitude)) {
-            throw new Error('Unexpected parameters format')
-        }
-        const arround = await Room.find({
-            location: {
-                $near: [latitude, longitude],
-                $maxDistance: 0.1
-            }
-        })
-        res.status(200).json(arround)
-    } catch (error) {
-        const status = error.status || 400
-        res.status(status).json({ error: { message: error.message }})
-    }
-})
+
 
 module.exports = router
