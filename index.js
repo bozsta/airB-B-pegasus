@@ -20,7 +20,7 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 }); 
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 3000
 const app = express()
 
 // Middleware
@@ -34,21 +34,6 @@ app.use('/user', userRoutes)
 const roomRoutes = require('./routes/rooms')
 app.use('/room', roomRoutes)
 
-/* Only for test */
-app.get('/mail', (req,res) => {
-    var data = {
-        from: 'Excited User <me@samples.mailgun.org>',
-        to: 'lubozfabien@hotmail.com',
-        subject: 'Hello test mail gun',
-        text: 'Testing some Mailgun awesomeness!'
-      }; 
-
-      mailgun.messages().send(data, function (error, body) {
-        console.log('body mailgun:', body);
-      });
-
-    res.status(200).json({ message: 'test mailgun'})
-})
 
 app.all('*', (req,res) => {
     res.status(404).json({error: { message: 'URL not found'}})
