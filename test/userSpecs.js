@@ -3,7 +3,6 @@ const expect = chai.expect
 const should = chai.should();
 let chaiHttp = require('chai-http')
 let { app, server } = require('../index')
-const { router } = require('../routes/user')
 chai.use(chaiHttp);
 
 const mongoose = require('mongoose');
