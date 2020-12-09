@@ -39,6 +39,11 @@ app.all('*', (req,res) => {
     res.status(404).json({error: { message: 'URL not found'}})
 })
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`)
 })
+
+module.exports = {
+    app,
+    server
+}

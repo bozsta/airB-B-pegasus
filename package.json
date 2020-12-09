@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "dev": "npx nodemon index.js",
     "start": "node index.js"
   },
@@ -22,5 +22,11 @@
     "mailgun-js": "^0.22.0",
     "mongoose": "^5.10.13",
     "uid2": "0.0.3"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "mocha": "^8.2.1",
+    "mongodb-memory-server": "^6.9.2"
   }
 }
