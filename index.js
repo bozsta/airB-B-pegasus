@@ -29,9 +29,9 @@ app.use(cors())
 app.use(helmet())
 
 // Routes
-const userRoutes = require('./routes/user')
+const userRoutes = require('./routes/User')
 app.use('/user', userRoutes)
-const roomRoutes = require('./routes/rooms')
+const roomRoutes = require('./routes/Rooms')
 app.use('/room', roomRoutes)
 
 
