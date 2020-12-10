@@ -31,7 +31,7 @@ app.use(helmet())
 // Routes
 const userRoutes = require('./routes/User')
 app.use('/user', userRoutes)
-const roomRoutes = require('./routes/Rooms')
+const roomRoutes = require('./routes/rooms')
 app.use('/room', roomRoutes)
 
 
