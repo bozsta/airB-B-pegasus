@@ -16,8 +16,8 @@ describe('User log in' , () => {
         })
         .end((err, res) => {
             res.should.have.status(200)
-            expect(res.body.email).to.equal('email@email.fr')
-            expect(res.body.username).to.equal('username')
+            expect(res.body.email).to.equal('email5@email.fr')
+            expect(res.body.username).to.equal('username5')
             expect(res.body.description).to.equal('description')
             expect(res.body.name).to.equal('name')
             done()
