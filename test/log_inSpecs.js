@@ -3,8 +3,8 @@ const expect = require('chai').expect
 const mongoUnit = require('mongo-unit')
 let { app, server } = require('../index')
 
-describe('User Sign Up' , () => {
-    it('shoud register user', done => {
+describe('User log in' , () => {
+    it('shoud log user', done => {
         chai.request(app)
         .post('/user/sign_up')
         .send({
