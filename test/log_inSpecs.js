@@ -9,8 +9,8 @@ describe('User log in' , () => {
         .post('/user/sign_up')
         .send({
             password: 'password',
-            email: "email@email.fr",
-            username: "username",
+            email: "email5@email.fr",
+            username: "username5",
             name: "name",
             description: "description",
         })
