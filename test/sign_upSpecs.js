@@ -5,9 +5,8 @@ let chaiHttp = require('chai-http')
 let { app, server } = require('../index')
 chai.use(chaiHttp);
 const mongoose = require('mongoose')
-const { User } = require('../models/Models')
 
-const dbHandler = require('./db-handler')
+const dbHandler = require('./db/db-handler')
 
 describe('User Sign Up' , () => {
     before('before hook', async () => {

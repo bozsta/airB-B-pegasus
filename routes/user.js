@@ -382,7 +382,7 @@ router.get('/:id', async (req, res) => {
         }
         res.status(200).json(user)
     } catch (error) {
-        const status = req.status || 400
+        const status = error.status || 400
         res.status(status).json({ error: {message: error.message}})
     }
 })

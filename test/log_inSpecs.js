@@ -6,16 +6,15 @@ let { app, server } = require('../index')
 chai.use(chaiHttp);
 const mongoose = require('mongoose')
 const generateHash = require('../utils/hashHelper')
-const { User } = require('../models/Models')
 
-const dbHandler = require('./db-handler')
+const dbHandler = require('./db/db-handler')
 
 describe('User log in' , () => {
     before('before hook', async () => {
         mongoose.disconnect()
         await dbHandler.connect()
         const user1 =   {
-            _id: 'userId',
+            _id: new mongoose.mongo.ObjectId('56cb91bdc3464f14678934ca'),
             token: 'token',
             email: 'email@email.fr',
             account: {

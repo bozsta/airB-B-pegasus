@@ -52,7 +52,7 @@ const insertData = async (collection, data) => {
  */
 const findAllDocuments = async (collection, cb) => {
     try {
-        await mongoose.connection.collection(collection).find({}).toArray(function(err, result) {
+        mongoose.connection.collection(collection).find({}).toArray(function(err, result) {
             if (err) throw err;
             cb(result)
             // db.close();
