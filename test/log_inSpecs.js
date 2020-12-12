@@ -14,7 +14,8 @@ describe('User log in' , () => {
     before('before hook', async () => {
         mongoose.disconnect()
         await dbHandler.connect()
-        const newUser = new User({
+        const user1 =   {
+            _id: 'userId',
             token: 'token',
             email: 'email@email.fr',
             account: {
@@ -24,8 +25,8 @@ describe('User log in' , () => {
             },
             hash: generateHash('password', 'salt'),
             salt: 'salt'
-        })
-        await newUser.save()
+        }
+        await dbHandler.insertData('users', [user1])
     }) 
     after('Process after test', async () => {
         await dbHandler.closeDatabase()
