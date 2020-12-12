@@ -5,7 +5,7 @@ const isAuthenticated = async (req, res, next) => {
         if (req.headers.authorization) {
             const token = req.headers.authorization.replace('Bearer ', '')
             const user = await User.findOne({token})
-            console.lo
+
             if (user) {
                 req.user = user
                 return next()
@@ -13,7 +13,6 @@ const isAuthenticated = async (req, res, next) => {
         }
         throw new Error('Unauthorized')
     } catch (error) {
-        console.log('qhdsqdh')
         res.status(401).json({ error: { message: error.message}})
     }
 }

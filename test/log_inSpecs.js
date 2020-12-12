@@ -5,8 +5,6 @@ let chaiHttp = require('chai-http')
 let { app, server } = require('../index')
 chai.use(chaiHttp);
 const mongoose = require('mongoose')
-const crypto = require('crypto-js')
-const encBase64 = require("crypto-js/enc-base64");
 const generateHash = require('../utils/hashHelper')
 const { User } = require('../models/Models')
 

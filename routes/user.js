@@ -82,7 +82,7 @@ router.post('/log_in', async (req,res) => {
         if (!password || !password.trim() 
             || !email || !email.trim()) {
                 throw new Error('Missing parameters')
-            }
+        }
             
         email = email.trim()
         password = password.trim()
@@ -94,7 +94,6 @@ router.post('/log_in', async (req,res) => {
 
         const hash = crypto.SHA256(password + user.salt).toString(encBase64)
         if (hash !== user.hash) {
-            // res.status(401).json({error :'Unauthorized'})
             throw CustomException(401, 'Unauthorized')
         }
 
