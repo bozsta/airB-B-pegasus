@@ -119,10 +119,10 @@ router.put('/update', isAuthenticated, async (req,res) => {
             if (email.trim().length) {
                 email = email.trim()
                 const emailAlready = await User.findOne({email})
-                if (emailAlready) {
+               if (emailAlready) {
                     throw CustomException(409, `Email already already exist`)
-                }
-                user.email = email
+               }
+                 user.email = email
             } else { throw new Error('Email is an empty string')}
         }
         if (username !== undefined) {
@@ -242,7 +242,6 @@ router.post('/reset_password', async (req, res) => {
             throw new Error('Missing Parameters')
         }
         const user = await User.findOne({updatePasswordToken})
-        console.log('user', user)
         if (!user) {
             throw CustomException(404, 'User not found')
         }
@@ -253,7 +252,6 @@ router.post('/reset_password', async (req, res) => {
         user.salt = newSalt
         user.hash = newHash
         const updatedUser = await user.save()
-        console.log('updatedUser',updatedUser)
         res.status(200).json({
             _id: updatedUser._id,
             email: updatedUser.email,
@@ -269,7 +267,6 @@ router.post('/reset_password', async (req, res) => {
 router.delete('/delete/:id', async (req,res) => {
     try {
         const { id } = req.params
-        console.log('id', id)
         await Room.deleteMany({user: id})
         await User.deleteOne({ _id: id })
         res.status(200).json({ message: "User deleted" })
