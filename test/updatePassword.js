@@ -5,7 +5,7 @@ let chaiHttp = require('chai-http')
 let { app, server } = require('../index')
 chai.use(chaiHttp);
 const mongoose = require('mongoose')
-const generateHash = require('../utils/hashHelper')
+const users = require('./fakeData/fakeUsers')
 
 const dbHandler = require('./db/db-handler')
 
@@ -14,36 +14,24 @@ describe('Update user data', () => {
     before('before hook', async () => {
         mongoose.disconnect()
         await dbHandler.connect()
-        const password = 'password'
-        const salt = 'salt'
-        const user1 =   {
-            _id: new mongoose.mongo.ObjectId('56cb91bdc3464f14678934ca'),
-            token: 'token',
-            email: 'email@email.fr',
-            account: {
-                username: 'username',
-                name: 'name',
-                description: 'description',
-            },
-            hash: generateHash(password, salt),
-            salt: salt
-        }
-        await dbHandler.insertData('users', [user1])
+        await dbHandler.insertData('users', [users.user1])
     }) 
     after('Process after test', async () => {
         await dbHandler.closeDatabase()
         server.close()
     })
     describe('Should success', () => {
-        it('update password', done => {
+        it('update password',async  () => {
+            const oldHash =  await dbHandler.findDocumentById('users', users.user1._id)
             chai.request(app)
             .put('/user/update_password')
             .set({ 'authorization': `Bearer token` })
             .send({ oldPass:  'password',newPass: 'newpassword' })
-            .end((req,res) => {
+            .end( async (req,res) => {
                 res.should.have.status(200)
-                expect(res.body._id).to.equal('56cb91bdc3464f14678934ca')
-                done()
+                expect(res.body._id).to.equal(users.user1._id.toString())
+                const user = await dbHandler.findDocumentById('users', users.user1._id)
+                expect(user.hash).to.not.equal(oldHash.hash)
             })
         })
     })
