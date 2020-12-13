@@ -5,7 +5,7 @@ let chaiHttp = require('chai-http')
 let { app, server } = require('../index')
 chai.use(chaiHttp);
 const mongoose = require('mongoose')
-const generateHash = require('../utils/hashHelper')
+const users = require('./fakeData/fakeUsers')
 
 const dbHandler = require('./db/db-handler')
 
@@ -13,19 +13,7 @@ describe('User log in' , () => {
     before('before hook', async () => {
         mongoose.disconnect()
         await dbHandler.connect()
-        const user1 =   {
-            _id: new mongoose.mongo.ObjectId('56cb91bdc3464f14678934ca'),
-            token: 'token',
-            email: 'email@email.fr',
-            account: {
-                username: 'username',
-                name: 'name',
-                description: 'description',
-            },
-            hash: generateHash('password', 'salt'),
-            salt: 'salt'
-        }
-        await dbHandler.insertData('users', [user1])
+        await dbHandler.insertData('users', [users.user1])
     }) 
     after('Process after test', async () => {
         await dbHandler.closeDatabase()
