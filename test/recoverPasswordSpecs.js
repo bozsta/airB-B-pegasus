@@ -1,4 +1,4 @@
-const chai = require('chai')
+/* const chai = require('chai')
 const expect = chai.expect
 const should = chai.should();
 let chaiHttp = require('chai-http')
@@ -33,4 +33,4 @@ describe('Recover user password', () => {
             })
         })
     })
-})
+}) */
