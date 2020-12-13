@@ -63,6 +63,34 @@ const findAllDocuments = async (collection, cb) => {
 }
 
 /**
+ * Find  document by Id in a db collection.
+ */
+const findDocumentById = async (collection, id) => {
+    try {
+        id = new mongoose.mongo.ObjectId(id)
+        const result = await mongoose.connection.collection(collection).findOne({_id: id})
+        return result
+    } catch (error) {
+        console.log('error', error.message)
+        throw new Error('db-handler findDocumentById error', error.message)
+    }
+}
+
+/**
+ * Find documents by filter in a db collection.
+ */
+const findDocumentByFilter = async (collection, Filter) => {
+    try {
+        // const result = await mongoose.connection.collection(collection).findOne()
+       const result = await mongoose.connection.collection(collection).findOne(Filter)
+        return result
+    } catch (error) {
+        console.log('error', error.message)
+        throw new Error('db-handler findDocumentById error', error.message)
+    }
+}
+
+/**
  * Remove all the data for all db collections.
  */
 const clearDatabase = async () => {
@@ -83,5 +111,7 @@ module.exports = {
     closeDatabase,
     insertData,
     findAllDocuments,
+    findDocumentById,
+    findDocumentByFilter,
     clearDatabase
 }
