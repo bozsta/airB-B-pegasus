@@ -14,29 +14,6 @@ describe('Delete user by id', () => {
     before('before hook', async () => {
         mongoose.disconnect()
         await dbHandler.connect()
-        /* const user1 =   {
-            _id: new mongoose.mongo.ObjectId('56cb91bdc3464f14678934ca'),
-            token: 'token',
-            email: 'email@email.fr',
-            account: {
-                username: 'username',
-                name: 'name',
-                description: 'description',
-            },
-            hash: generateHash(password, salt),
-            salt: salt
-        } */
-       /*  const Room1 = {
-            _id: new mongoose.mongo.ObjectId('111111111111111111111111'),
-            title: "Room in Paris 1",
-            description: "Paris 1",
-            price: 250,
-            location: {
-              lat: 48.888823,
-              lng: 3.34118
-            },
-            user: new mongoose.mongo.ObjectId('56cb91bdc3464f14678934ca')
-        } */
         rooms.Room1.user = users.user1._id
         await dbHandler.insertData('users', [users.user1])
         await dbHandler.insertData('rooms', [rooms.Room1])
