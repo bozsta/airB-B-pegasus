@@ -22,7 +22,6 @@ describe('Update user data', () => {
     })
     describe('Should success', () => {
         it('update password', done => {
-            // const oldHash =  await dbHandler.findDocumentById('users', users.user1._id)
             chai.request(app)
             .put('/user/update_password')
             .set({ 'authorization': `Bearer token` })
