@@ -12,7 +12,9 @@ const user1 =   {
         description: 'description',
     },
     hash: generateHash(password, salt),
-    salt: salt
+    salt: salt,
+    updatePasswordToken: 'updatePasswordToken1',
+    updatePasswordExpiredAt: Date.now()  + (15 * 60000)
 }
 const user2 =   {
     _id: new mongoose.mongo.ObjectId('56cb91bdc3464f14678934cb'),
@@ -24,7 +26,9 @@ const user2 =   {
         description: 'description2',
     },
     hash: generateHash(password, salt),
-    salt: salt
+    salt: salt,
+    updatePasswordToken: 'updatePasswordToken2',
+    updatePasswordExpiredAt: Date.now()  + (15 * 60000)
 }
 
 module.exports = {
