@@ -21,8 +21,8 @@ describe('Update user data', () => {
         server.close()
     })
     describe('Should success', () => {
-        it('update password',async  () => {
-            const oldHash =  await dbHandler.findDocumentById('users', users.user1._id)
+        it('update password', done => {
+            // const oldHash =  await dbHandler.findDocumentById('users', users.user1._id)
             chai.request(app)
             .put('/user/update_password')
             .set({ 'authorization': `Bearer token` })
@@ -31,7 +31,8 @@ describe('Update user data', () => {
                 res.should.have.status(200)
                 expect(res.body._id).to.equal(users.user1._id.toString())
                 const user = await dbHandler.findDocumentById('users', users.user1._id)
-                expect(user.hash).to.not.equal(oldHash.hash)
+                expect(user.hash).to.not.equal(users.user1.hash)
+                done()
             })
         })
     })
