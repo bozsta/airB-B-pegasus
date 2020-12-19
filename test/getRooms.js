@@ -15,9 +15,9 @@ describe('Get rooms', () => {
         mongoose.disconnect()
         await dbHandler.connect()
         await dbHandler.insertData('users', [users.user1, users.user2])
-        // rooms.Room1.user = users.user1._id
-        // rooms.Room2.user = users.user1._id
-        // rooms.Room3.user = users.user2._id
+        rooms.Room1.user = users.user1._id
+        rooms.Room2.user = users.user1._id
+        rooms.Room3.user = users.user2._id
         // await dbHandler.insertData('rooms', [rooms.Room1, rooms.Room2, rooms.Room3])
     }) 
     after('Process after test', async () => {
