@@ -30,7 +30,7 @@ describe('Get rooms', () => {
             .get(`/room/`)
             .end((req,res) => {
                 res.should.have.status(200)
-                // expect((res.body).length).to.equal(3)
+                expect((res.body).length).to.equal(3)
                 done()
             })
         })
