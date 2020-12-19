@@ -18,7 +18,7 @@ describe('User Sign Up' , () => {
         server.close()
     })
     describe('Should success' , () => {
-        it('shoud register user', done => {
+        it('should register user', done => {
             chai.request(app)
             .post('/user/sign_up')
             .send({
@@ -37,7 +37,7 @@ describe('User Sign Up' , () => {
                 done()
             })
         })
-        it('shoud register second user same name, password & description', done => {
+        it('should register second user same name, password & description', done => {
             chai.request(app)
             .post('/user/sign_up')
             .send({
@@ -58,7 +58,7 @@ describe('User Sign Up' , () => {
         })
     })
     describe('Should failled' , () => {
-        it('shoud failled email already exist', done => {
+        it('should failled email already exist', done => {
             chai.request(app)
             .post('/user/sign_up')
             .send({
@@ -74,7 +74,7 @@ describe('User Sign Up' , () => {
                 done()
             })
         })
-        it('shoud failled username already exist', done => {
+        it('should failled username already exist', done => {
             chai.request(app)
             .post('/user/sign_up')
             .send({
@@ -90,7 +90,7 @@ describe('User Sign Up' , () => {
                 done()
             })
         })
-        it('shoud failled email & username already exist', done => {
+        it('should failled email & username already exist', done => {
             chai.request(app)
             .post('/user/sign_up')
             .send({
@@ -106,7 +106,7 @@ describe('User Sign Up' , () => {
                 done()
             })
         })
-        it('shoud failled missing email', done => {
+        it('should failled missing email', done => {
             chai.request(app)
             .post('/user/sign_up')
             .send({
@@ -121,7 +121,7 @@ describe('User Sign Up' , () => {
                 done()
             })
         })
-        it('shoud failled empty email', done => {
+        it('should failled empty email', done => {
             chai.request(app)
             .post('/user/sign_up')
             .send({
@@ -137,7 +137,7 @@ describe('User Sign Up' , () => {
                 done()
             })
         })
-        it('shoud failled missing password', done => {
+        it('should failled missing password', done => {
             chai.request(app)
             .post('/user/sign_up')
             .send({
@@ -152,7 +152,7 @@ describe('User Sign Up' , () => {
                 done()
             })
         })
-        it('shoud failled empty password', done => {
+        it('should failled empty password', done => {
             chai.request(app)
             .post('/user/sign_up')
             .send({
@@ -168,7 +168,7 @@ describe('User Sign Up' , () => {
                 done()
             })
         })
-        it('shoud failled missing username', done => {
+        it('should failled missing username', done => {
             chai.request(app)
             .post('/user/sign_up')
             .send({
@@ -183,7 +183,7 @@ describe('User Sign Up' , () => {
                 done()
             })
         })
-        it('shoud failled empty username', done => {
+        it('should failled empty username', done => {
             chai.request(app)
             .post('/user/sign_up')
             .send({
@@ -199,7 +199,7 @@ describe('User Sign Up' , () => {
                 done()
             })
         })
-        it('shoud failled missing name', done => {
+        it('should failled missing name', done => {
             chai.request(app)
             .post('/user/sign_up')
             .send({
@@ -214,7 +214,7 @@ describe('User Sign Up' , () => {
                 done()
             })
         })
-        it('shoud failled empty name', done => {
+        it('should failled empty name', done => {
             chai.request(app)
             .post('/user/sign_up')
             .send({
@@ -231,7 +231,7 @@ describe('User Sign Up' , () => {
                 done()
             })
         })
-        it('shoud failled missing name', done => {
+        it('should failled missing name', done => {
             chai.request(app)
             .post('/user/sign_up')
             .send({
@@ -246,7 +246,7 @@ describe('User Sign Up' , () => {
                 done()
             })
         })
-        it('shoud failled empty name', done => {
+        it('should failled empty name', done => {
             chai.request(app)
             .post('/user/sign_up')
             .send({

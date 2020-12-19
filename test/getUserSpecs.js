@@ -19,7 +19,7 @@ describe('Get user by id', () => {
         await dbHandler.closeDatabase()
         server.close()
     })
-    describe('Shoud success', () => {
+    describe('Should success', () => {
         it('return user data', done => {
             chai.request(app)
             .get(`/user/${users.user1._id}`)
@@ -34,7 +34,7 @@ describe('Get user by id', () => {
             
         })
     })
-    describe('Shoud failled', () => {
+    describe('Should failled', () => {
         it('wrong user id', done => {
             chai.request(app)
             .get('/user/56cb91bdc3464f14678934cb')
