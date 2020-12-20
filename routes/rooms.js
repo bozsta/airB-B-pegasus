@@ -10,10 +10,10 @@ router.post('/publish', isAuthenticated, async (req,res) => {
 
         if (!title || !title.trim() 
         || !description || !description.trim()
-        || !price || isNaN(price)
+        || !price || !price.trim() || isNaN(price) 
         || !location 
-        || !location.lat || isNaN(location.lat)
-        || !location.lng || isNaN(location.lng)) {
+        || !location.lat || !location.lat.trim() || isNaN(location.lat)
+        || !location.lng || !location.lng.trim() || isNaN(location.lng)) {
             throw new Error('Missing parameters')
         }
 
@@ -33,7 +33,7 @@ router.post('/publish', isAuthenticated, async (req,res) => {
         const result = await newRoom.save()
         res.status(200).json(result)
     } catch (error) {
-        res.status(400).json({ error: { message: error.message}})
+        res.status(400).json({ error: { message: error.message } })
     }
 })
 
