@@ -27,14 +27,26 @@ const Room3 = {
   description: "Marseille",
   price: 300,
   location: {
-    lat: 30.888823,
-    lng: 10.34118
+    lat: 20.888823,
+    lng: 20.34118
   },
   user: new mongoose.mongo.ObjectId('333333333333333333333333')
 }
 
+const Room4 = {
+  _id: new mongoose.mongo.ObjectId('444444444444444444444444'),
+  title: "Room in Marseille 2",
+  description: "Marseille 2",
+  price: 50,
+  location: {
+    lat: 30.888823,
+    lng: 10.34118
+  },
+  user: new mongoose.mongo.ObjectId('444444444444444444444444')
+}
 module.exports = {
     Room1,
     Room2,
-    Room3
+    Room3,
+    Room4
 }
