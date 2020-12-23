@@ -10,7 +10,7 @@ const rooms = require('./fakeData/FakeRooms')
 
 const dbHandler = require('./db/db-handler')
 
-describe('Get room sfiltered', () => {
+describe('Get rooms filtered', () => {
     before('before hook', async () => {
         mongoose.disconnect()
         await dbHandler.connect()
@@ -155,7 +155,6 @@ describe('Get room sfiltered', () => {
             chai.request(app)
             .get(`/room/filtered?sort=WRONG`)
             .end((req,res) => {
-                console.log(res.body)
                 res.should.have.status(400)
                 expect(res.body.error.message).to.equal('Invalde sort parameter value')
                 done()
