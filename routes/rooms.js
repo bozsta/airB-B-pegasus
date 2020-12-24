@@ -2,7 +2,8 @@ const router = require('express').Router()
 const { User, Room } = require('../models/Models')
 const isAuthenticated  = require('../middlewares/isAuthenticated')
 const { CustomException } = require('../utils/exeptionHelper')
-const cloudinary = require('cloudinary').v2
+// const cloudinary = require('cloudinary').v2
+const cloudinary = require('../utils/cloudinaryHelper')
 
 router.post('/publish', isAuthenticated, async (req,res) => {
     try {
@@ -183,8 +184,9 @@ router.delete('/delete/:id', isAuthenticated, async (req,res) => {
         if (!req.user._id.equals(room.user._id)) {
             throw CustomException(401, 'Unauthorized')
         }
-        await cloudinary.api.delete_resources_by_prefix(`airBnB/rooms/${id}`)
-        cloudinary.api.delete_folder(`airBnB/rooms/${id}`)
+        /* await cloudinary.api.delete_resources_by_prefix(`airBnB/rooms/${id}`)
+        cloudinary.api.delete_folder(`airBnB/rooms/${id}`) */
+        cloudinary.deleteResourcesAndFolder('airBnB/rooms/',id)
         await room.deleteOne({id})
         res.status(200).json({ message: 'Room deleted'})
     } catch (error) {
