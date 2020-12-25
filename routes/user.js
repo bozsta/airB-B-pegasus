@@ -5,8 +5,10 @@ const encBase64 = require("crypto-js/enc-base64");
 const { User, Room } = require('../models/Models');
 const { CustomException } = require('../utils/exeptionHelper');
 const isAuthenticated = require('../middlewares/isAuthenticated');
-const mailgun = require('mailgun-js')({apiKey: process.env.MAILGUN_API_KEY, domain: process.env.MAILGUN_DOMAIN});
-const cloudinary = require('cloudinary').v2
+// const mailgun = require('mailgun-js')({apiKey: process.env.MAILGUN_API_KEY, domain: process.env.MAILGUN_DOMAIN});
+const emailHelper = require('../utils/emailHelper')
+const cloudinaryHelper = require('../utils/cloudinaryHelper')
+// const cloudinary = require('cloudinary').v2
 
 router.post('/sign_up', async (req,res) => {
     try {
@@ -225,7 +227,8 @@ router.post('/recover_password', async (req,res) => {
             <a>link to reset IHM</a>`
           }; 
     
-          const result = await mailgun.messages().send(data)
+          // const result = await mailgun.messages().send(data)
+          const result = await emailHelper.send(data)
           res.status(200).json({ message: 'A link has been sent to the user'})
         
     } catch (error) {
@@ -275,7 +278,7 @@ router.delete('/delete/:id', async (req,res) => {
         res.status(status).json({ error: { message: error.message } })
     }
 })
-
+// todo unit test
 router.put('/upload_picture/:id', isAuthenticated, async (req,res) => {
     try {
         const { id } =  req.params
@@ -292,7 +295,8 @@ router.put('/upload_picture/:id', isAuthenticated, async (req,res) => {
         if (!req.user._id.equals(user._id)) {
             throw CustomException(401, "Unauthorized")
         }
-        const result = await cloudinary.uploader.upload(picture.path, { folder: `airBnB/users/${user._id}` })
+        // const result = await cloudinary.uploader.upload(picture.path, { folder: `airBnB/users/${user._id}` })
+        const result = await cloudinaryHelper.uploadImage(picture.path, `airBnB/users/${user._id}`)
         if (!result.secure_url) {
             throw new Error('Error cloud image upload')
         }
@@ -319,7 +323,7 @@ router.put('/upload_picture/:id', isAuthenticated, async (req,res) => {
         res.status(status).json({ error: { message: error.message}}) 
     }
 })
-
+// todo unit test
 router.delete('/delete_picture/:id', isAuthenticated, async (req,res) => {
     try {
         const { id } = req.params
@@ -334,8 +338,9 @@ router.delete('/delete_picture/:id', isAuthenticated, async (req,res) => {
             throw CustomException(404, 'No item to delete')
         }
         const image_id = user.account.photo.public_id
-        await cloudinary.api.delete_resources([user.account.photo.public_id])
-        await cloudinary.api.delete_folder(`airBnB/users/${id}`)
+        /* await cloudinary.api.delete_resources([user.account.photo.public_id])
+        await cloudinary.api.delete_folder(`airBnB/users/${id}`) */
+        await cloudinaryHelper.deleteImage([user.account.photo.public_id], `airBnB/users/${id}`)
 
         user.account.photo = null
         const userUpdated = await user.save()
