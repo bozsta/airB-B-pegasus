@@ -2,8 +2,8 @@ const router = require('express').Router()
 const { User, Room } = require('../models/Models')
 const isAuthenticated  = require('../middlewares/isAuthenticated')
 const { CustomException } = require('../utils/exeptionHelper')
-// const cloudinary = require('cloudinary').v2
-const cloudinary = require('../utils/cloudinaryHelper')
+const cloudinary = require('cloudinary').v2
+const cloudinaryHleper = require('../utils/cloudinaryHelper')
 
 router.post('/publish', isAuthenticated, async (req,res) => {
     try {
@@ -186,7 +186,7 @@ router.delete('/delete/:id', isAuthenticated, async (req,res) => {
         }
         /* await cloudinary.api.delete_resources_by_prefix(`airBnB/rooms/${id}`)
         cloudinary.api.delete_folder(`airBnB/rooms/${id}`) */
-        cloudinary.deleteResourcesAndFolder('airBnB/rooms/',id)
+        cloudinaryHleper.deleteResourcesAndFolder('airBnB/rooms/',id)
         await room.deleteOne({id})
         res.status(200).json({ message: 'Room deleted'})
     } catch (error) {
@@ -194,7 +194,7 @@ router.delete('/delete/:id', isAuthenticated, async (req,res) => {
         res.status(status).json({ error: { message: error.message }})
     }
 })
-
+// todo unit test
 router.put('/upload_picture/:id', isAuthenticated, async (req,res) => {
     try {
         const { id } = req.params
@@ -237,7 +237,7 @@ router.put('/upload_picture/:id', isAuthenticated, async (req,res) => {
         res.status(status).json({ error: { message: error.message }})
     }
 })
-
+// todo unit test
 router.delete('/delete_picture/:id', isAuthenticated, async (req,res) => {
     try {
         const { id } = req.params

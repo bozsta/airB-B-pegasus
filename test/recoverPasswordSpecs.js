@@ -7,18 +7,16 @@ chai.use(chaiHttp);
 const mongoose = require('mongoose')
 const users = require('./fakeData/fakeUsers')
 const sinon = require('sinon')
-
-const dbHandler = require('./db/db-handler')
-
 const emailHelper = require('../utils/emailHelper')
 
+const dbHandler = require('./db/db-handler')
 
 describe('Recover user password', () => {
     before('before hook', async () => {
         mongoose.disconnect()
         await dbHandler.connect()
         await dbHandler.insertData('users', [users.user1])
-        var fake = sinon.fake.returns('email send');
+        const fake = sinon.fake.returns('email send');
         sinon.replace(emailHelper, 'send', fake);
     }) 
     after('Process after test', async () => {
