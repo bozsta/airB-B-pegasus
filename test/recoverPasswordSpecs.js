@@ -37,10 +37,46 @@ describe('Recover user password', () => {
             })
         })
     })
-    // todo
+    
     describe('Should failled', () => {
-        it('TODO', done => {
-            done()
+        it('wrong email', done => {
+            chai.request(app)
+            .post('/user/recover_password')
+            .send({
+                email: `wrongemail@email.fr`
+            })
+            .end((req, res) => {
+                console.log('res.body', res.body)
+                res.should.have.status(404)
+                expect(res.body.error.message).to.equal('Email not found')
+                done()
+            })
+        })
+        it('missing email parameter', done => {
+            chai.request(app)
+            .post('/user/recover_password')
+            .send({
+               
+            })
+            .end((req, res) => {
+                console.log('res.body', res.body)
+                res.should.have.status(404)
+                expect(res.body.error.message).to.equal('Email not found')
+                done()
+            })
+        })
+        it('email empty string', done => {
+            chai.request(app)
+            .post('/user/recover_password')
+            .send({
+                email: `  `
+            })
+            .end((req, res) => {
+                console.log('res.body', res.body)
+                res.should.have.status(404)
+                expect(res.body.error.message).to.equal('Email not found')
+                done()
+            })
         })
     })
 })
