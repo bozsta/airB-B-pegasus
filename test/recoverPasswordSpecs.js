@@ -46,7 +46,6 @@ describe('Recover user password', () => {
                 email: `wrongemail@email.fr`
             })
             .end((req, res) => {
-                console.log('res.body', res.body)
                 res.should.have.status(404)
                 expect(res.body.error.message).to.equal('Email not found')
                 done()
@@ -59,7 +58,6 @@ describe('Recover user password', () => {
                
             })
             .end((req, res) => {
-                console.log('res.body', res.body)
                 res.should.have.status(404)
                 expect(res.body.error.message).to.equal('Email not found')
                 done()
@@ -72,7 +70,6 @@ describe('Recover user password', () => {
                 email: `  `
             })
             .end((req, res) => {
-                console.log('res.body', res.body)
                 res.should.have.status(404)
                 expect(res.body.error.message).to.equal('Email not found')
                 done()
