@@ -1,0 +1,9 @@
+{
+    "all": true,
+    "exclude": [
+      "test/**/*js",
+      "coverage/**/*js",
+      "utils/cloudinaryHelper.js",
+      "utils/emailHelper.js"
+    ]
+  }
