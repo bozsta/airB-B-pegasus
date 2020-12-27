@@ -96,7 +96,7 @@ router.get('/filtered', async (req,res) => {
         res.status(400).json({ error: { message: error.message } })
     }
 })
-
+// todo unit test
 router.get('/around', async (req, res) => {
     try {
         let { latitude, longitude } = req.query
