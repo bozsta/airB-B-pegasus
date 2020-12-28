@@ -2,7 +2,7 @@ const router = require('express').Router()
 const { User, Room } = require('../models/Models')
 const isAuthenticated  = require('../middlewares/isAuthenticated')
 const { CustomException } = require('../utils/exeptionHelper')
-const cloudinary = require('cloudinary').v2
+// const cloudinary = require('cloudinary').v2
 const cloudinaryHelper = require('../utils/cloudinaryHelper')
 
 router.post('/publish', isAuthenticated, async (req,res) => {
@@ -238,7 +238,7 @@ router.put('/upload_picture/:id', isAuthenticated, async (req,res) => {
         res.status(status).json({ error: { message: error.message }})
     }
 })
-// todo unit test
+
 router.delete('/delete_picture/:id', isAuthenticated, async (req,res) => {
     try {
         const { id } = req.params
@@ -277,6 +277,5 @@ router.delete('/delete_picture/:id', isAuthenticated, async (req,res) => {
         res.status(status).json({ error: { message: error.message }})
     }
 })
-
 
 module.exports = router

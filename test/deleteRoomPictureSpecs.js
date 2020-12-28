@@ -9,7 +9,6 @@ const users = require('./fakeData/fakeUsers')
 const rooms = require('./fakeData/FakeRooms')
 const sinon = require('sinon')
 const cloudinaryHleper = require('../utils/cloudinaryHelper')
-// const fs = require('fs')
 
 const dbHandler = require('./db/db-handler')
 
@@ -20,6 +19,8 @@ describe("Delete room's picture", () => {
         await dbHandler.insertData('users', [users.user1, users.user2])
         rooms.Room1.user = users.user1._id
         await dbHandler.insertData('rooms', [rooms.Room1])
+        const fakeCloudinaryImageDelete = sinon.fake.returns('image deleted');
+        sinon.replace(cloudinaryHleper, 'deleteImage', fakeCloudinaryImageDelete);
     }) 
     after('Process after test', async () => {
         await dbHandler.closeDatabase()
