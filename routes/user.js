@@ -285,7 +285,7 @@ router.put('/upload_picture/:id', isAuthenticated, async (req,res) => {
         const picture = req.files.picture
 
         if (!picture) {
-            throw new Error('Missing file paraméters')
+            throw new Error('Missing file parameters')
         }
 
         const user = await User.findById(id)
