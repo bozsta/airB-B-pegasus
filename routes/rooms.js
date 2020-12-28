@@ -254,15 +254,22 @@ router.delete('/delete_picture/:id', isAuthenticated, async (req,res) => {
         if (!req.user._id.equals(room.user._id)) {
             throw CustomException(401, 'Unauthorizeds')
         }
-        await cloudinary.api.delete_resources([picture_id])
+        // await cloudinary.api.delete_resources([picture_id])
+        await cloudinaryHelper.deleteImage([picture_id])
+        let isRemove = false 
         for (let i = 0; i < room.photos.length; i++) {
             if (room.photos[i].public_id === picture_id) {
-                room.photos.splice(i,1)
+                const removed = room.photos.splice(i,1)
+                isRemove = true 
             }
+        }
+        if (!isRemove) {
+            throw CustomException(404, 'Image not found')
         }
         room.save()
         if (!room.photos.length) {
-            cloudinary.api.delete_folder(`airBnB/rooms/${id}`)
+            // cloudinary.api.delete_folder(`airBnB/rooms/${id}`)
+            cloudinaryHelper.deleteFolder(`airBnB/rooms/${id}`)
         }
         res.status(200).json({ message: "Picture deleted"})
     } catch (error) {

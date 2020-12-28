@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Room1 = {
     _id: new mongoose.mongo.ObjectId('111111111111111111111111'),
-    photos: [ {}, {}, {}, {} ],
+    photos: [ {url:'secure_url1', public_id: 'public_id1' }, {url:'secure_url2', public_id: 'public_id2'}, {url:'secure_url3', public_id: 'public_id3'}, {url:'secure_url4', public_id: 'public_id4'} ],
     title: "Room in Paris 1",
     description: "Paris 1",
     price: 250,
