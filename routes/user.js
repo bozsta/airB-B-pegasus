@@ -278,7 +278,6 @@ router.delete('/delete/:id', async (req,res) => {
         res.status(status).json({ error: { message: error.message } })
     }
 })
-// todo unit test
 router.put('/upload_picture/:id', isAuthenticated, async (req,res) => {
     try {
         const { id } =  req.params
