@@ -340,7 +340,7 @@ router.delete('/delete_picture/:id', isAuthenticated, async (req,res) => {
         const image_id = user.account.photo.public_id
         /* await cloudinary.api.delete_resources([user.account.photo.public_id])
         await cloudinary.api.delete_folder(`airBnB/users/${id}`) */
-        await cloudinaryHelper.deleteImage([user.account.photo.public_id], `airBnB/users/${id}`)
+        await cloudinaryHelper.deleteImageAndFolder([user.account.photo.public_id], `airBnB/users/${id}`)
 
         user.account.photo = null
         const userUpdated = await user.save()
