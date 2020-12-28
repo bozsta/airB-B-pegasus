@@ -10,6 +10,7 @@ const user1 =   {
         username: 'username',
         name: 'name',
         description: 'description',
+        photo: { url:'secure_url1', public_id: 'public_id1' },
     },
     hash: generateHash(password, salt),
     salt: salt,

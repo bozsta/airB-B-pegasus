@@ -19,8 +19,8 @@ describe('Delete room data', () => {
         await dbHandler.insertData('users', [users.user1, users.user2])
         rooms.Room1.user = users.user1._id
         await dbHandler.insertData('rooms', [rooms.Room1])
-        const fakeCloudinaryDeleteByPrefix = sinon.fake.returns('email send');
-        sinon.replace(cloudinaryHelper, 'deleteResourcesAndFolder', fakeCloudinaryDeleteByPrefix);
+       //  const fakeCloudinaryDeleteByPrefix = sinon.fake.returns('email send');
+        // sinon.replace(cloudinaryHelper, 'deleteResourcesAndFolder', fakeCloudinaryDeleteByPrefix);
     }) 
     after('Process after test', async () => {
         await dbHandler.closeDatabase()

@@ -328,20 +328,20 @@ router.delete('/delete_picture/:id', isAuthenticated, async (req,res) => {
         const { id } = req.params
         const user = await User.findById(id)
         if (!user) {
-            throw CustomException(404, 'User not found')
+            throw CustomException(404, "User not found")
         }
         if (!req.user._id.equals(user._id)) {
             throw CustomException(401, "Unauthorized")
         }
         if (!user.account.photo || !user.account.photo.public_id) {
-            throw CustomException(404, 'No item to delete')
+            throw CustomException(404, "No item to delete")
         }
         const image_id = user.account.photo.public_id
         /* await cloudinary.api.delete_resources([user.account.photo.public_id])
         await cloudinary.api.delete_folder(`airBnB/users/${id}`) */
-        await cloudinaryHelper.deleteImageAndFolder([user.account.photo.public_id], `airBnB/users/${id}`)
+        cloudinaryHelper.deleteImageAndFolder([user.account.photo.public_id], `airBnB/users/${id}`)
 
-        user.account.photo = null
+        user.account.photo = { }
         const userUpdated = await user.save()
         
         res.status(200).json(
@@ -358,7 +358,7 @@ router.delete('/delete_picture/:id', isAuthenticated, async (req,res) => {
               }
         )
     } catch (error) {
-        const status = req.status || 400
+        const status = error.status || 400
         res.status(status).json({ error: {message: error.message}})
     }
 })
@@ -369,7 +369,7 @@ router.get('/rooms/:id', async (req,res) => {
         const rooms = await Room.find({user: id})
         res.status(200).json(rooms)
     } catch (error) {
-        const status = req.status || 400
+        const status = error.status || 400
         res.status(status).json({ error: {message: error.message}}) 
     }
 })
